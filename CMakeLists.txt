@@ -7,7 +7,7 @@ option(LINK_SYMBOLIC "enable linking with -Bsymbolic" OFF)
 option(OBJCOPY_LOCALIZE "enable processing the library with objcopy" OFF)
 
 if (DYNAMIC_DEEPBIND)
-    add_compile_definitions(DYNAMIC_DEEPBIND)
+    add_compile_options(-DDYNAMIC_DEEPBIND)
 endif()
 
 add_library(static STATIC "static.cpp" "static.h")
