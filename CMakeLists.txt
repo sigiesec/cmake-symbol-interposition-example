@@ -33,7 +33,7 @@ if (OBJCOPY_LOCALIZE)
 
     add_custom_command(OUTPUT libshared1i.a
             DEPENDS shared1r static static.nm
-            COMMAND ld -Ur $<TARGET_OBJECTS:shared1r> $<TARGET_FILE:static> -o libshared1i.a
+            COMMAND ${CMAKE_LINKER} -Ur $<TARGET_OBJECTS:shared1r> $<TARGET_FILE:static> -o libshared1i.a
             COMMAND ${CMAKE_OBJCOPY} -v --localize-symbols static.nm libshared1i.a
             WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
             COMMENT "Localizing all symbols for libshared1i.a.")
@@ -53,7 +53,7 @@ if (OBJCOPY_LOCALIZE)
 
     add_custom_command(OUTPUT libshared2i.a
             DEPENDS shared2r static static.nm
-            COMMAND ld -Ur $<TARGET_OBJECTS:shared2r> $<TARGET_FILE:static> -o libshared2i.a
+            COMMAND ${CMAKE_LINKER} -Ur $<TARGET_OBJECTS:shared2r> $<TARGET_FILE:static> -o libshared2i.a
             COMMAND ${CMAKE_OBJCOPY} -v --localize-symbols static.nm libshared2i.a
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             COMMENT "Localizing all symbols for libshared2i.a.")
