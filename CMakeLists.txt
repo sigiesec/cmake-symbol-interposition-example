@@ -28,48 +28,32 @@ function (generate_symbol_list FROM_TARGET)
             COMMENT "Generating list of all symbols for $<TARGET_FILE:${FROM_TARGET}>.")
 endfunction()
 
+function (create_localized_shared_lib TARGET DEP_LOCALIZE SOURCES)
+    add_library(${TARGET}r OBJECT ${SOURCES})
+    set_target_properties(${TARGET}r PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+    set_target_properties(${TARGET}r PROPERTIES LINK_FLAGS "-v")
+
+    add_custom_command(OUTPUT lib${TARGET}i.a
+            DEPENDS ${TARGET}r static static.nm
+            COMMAND ${CMAKE_LINKER} -Ur $<TARGET_OBJECTS:${TARGET}r> $<TARGET_FILE:${DEP_LOCALIZE}> -o lib${TARGET}i.a
+            COMMAND ${CMAKE_OBJCOPY} -v --localize-symbols ${DEP_LOCALIZE}.nm lib${TARGET}i.a
+            WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+            COMMENT "Localizing all symbols from ${DEP_LOCALIZE} in lib${TARGET}i.a.")
+
+    add_library(${TARGET}i INTERFACE)
+    set_target_properties(${TARGET}i PROPERTIES INTERFACE_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/lib${TARGET}i.a)
+    set_target_properties(${TARGET}i PROPERTIES INTERFACE_LINK_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/lib${TARGET}i.a)
+
+    add_library(${TARGET} SHARED dummy.cpp)
+    target_link_libraries(${TARGET} PRIVATE ${TARGET}i dl)
+    set_target_properties(${TARGET} PROPERTIES LINK_FLAGS "-v")
+endfunction()
+
 if (OBJCOPY_LOCALIZE)
     generate_symbol_list(static)
 
-    add_library(shared1r OBJECT "shared1.cpp")
-    set_target_properties(shared1r PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-    set_target_properties(shared1r PROPERTIES LINK_FLAGS "-v")
-
-    add_custom_command(OUTPUT libshared1i.a
-            DEPENDS shared1r static static.nm
-            COMMAND ${CMAKE_LINKER} -Ur $<TARGET_OBJECTS:shared1r> $<TARGET_FILE:static> -o libshared1i.a
-            COMMAND ${CMAKE_OBJCOPY} -v --localize-symbols static.nm libshared1i.a
-            WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-            COMMENT "Localizing all symbols for libshared1i.a.")
-
-    add_library(shared1i INTERFACE)
-    set_target_properties(shared1i PROPERTIES INTERFACE_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/libshared1i.a)
-    set_target_properties(shared1i PROPERTIES INTERFACE_LINK_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/libshared1i.a)
-
-    add_library(shared1 SHARED dummy.cpp)
-    target_link_libraries(shared1 PRIVATE shared1i dl)
-    set_target_properties(shared1 PROPERTIES LINK_FLAGS "-v")
-
-
-    add_library(shared2r OBJECT "shared2.cpp")
-    set_target_properties(shared2r PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-    set_target_properties(shared2r PROPERTIES LINK_FLAGS "-v")
-
-    add_custom_command(OUTPUT libshared2i.a
-            DEPENDS shared2r static static.nm
-            COMMAND ${CMAKE_LINKER} -Ur $<TARGET_OBJECTS:shared2r> $<TARGET_FILE:static> -o libshared2i.a
-            COMMAND ${CMAKE_OBJCOPY} -v --localize-symbols static.nm libshared2i.a
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMENT "Localizing all symbols for libshared2i.a.")
-
-    add_library(shared2i INTERFACE)
-    set_target_properties(shared2i PROPERTIES INTERFACE_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/libshared2i.a)
-    set_target_properties(shared2i PROPERTIES INTERFACE_LINK_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/libshared2i.a)
-
-    add_library(shared2 SHARED dummy.cpp)
-    target_link_libraries(shared2 PRIVATE shared2i dl)
-    set_target_properties(shared2 PROPERTIES LINK_FLAGS "-v")
-
+    create_localized_shared_lib(shared1 static "shared1.cpp")
+    create_localized_shared_lib(shared2 static "shared2.cpp")
 else ()
     add_library(shared1 SHARED "shared1.cpp")
     target_link_libraries(shared1 PRIVATE static )
