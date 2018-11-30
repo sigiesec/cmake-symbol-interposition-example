@@ -16,4 +16,4 @@ build_with_option () {
 
 build_with_option DYNAMIC_DEEPBIND
 build_with_option LINK_SYMBOLIC
-#build_with_option OBJCOPY_LOCALIZE
+build_with_option OBJCOPY_LOCALIZE
