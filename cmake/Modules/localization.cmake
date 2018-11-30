@@ -12,7 +12,7 @@ function (create_localized_shared_lib TARGET DEP_LOCALIZE SOURCES)
     set_target_properties(${TARGET}r PROPERTIES LINK_FLAGS "-v")
 
     add_custom_command(OUTPUT lib${TARGET}i.a
-            DEPENDS ${TARGET}r static static.nm
+            DEPENDS ${TARGET}r ${DEP_LOCALIZE} ${DEP_LOCALIZE}.nm
             COMMAND ${CMAKE_LINKER} -Ur $<TARGET_OBJECTS:${TARGET}r> $<TARGET_FILE:${DEP_LOCALIZE}> -o lib${TARGET}i.a
             COMMAND ${CMAKE_OBJCOPY} -v --localize-symbols ${DEP_LOCALIZE}.nm lib${TARGET}i.a
             WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
