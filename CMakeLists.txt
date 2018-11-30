@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(test2)
 
 option(DYNAMIC_DEEPBIND "enable dynamic loading of shared libraries with RTLD_DEEPBIND" OFF)
-option(LINK_SYMBOLIC "enable linking with -Bsymbolic" ON)
+option(LINK_SYMBOLIC "enable linking with -Bsymbolic" OFF)
 option(OBJCOPY_LOCALIZE "enable processing the library with objcopy" OFF)
 
 if (DYNAMIC_DEEPBIND)
