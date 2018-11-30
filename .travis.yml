@@ -25,5 +25,6 @@ matrix:
          - MATRIX_EVAL="CC=clang && CXX=clang++"
 
 script:
+  - eval "${MATRIX_EVAL}"
   - ./build.sh
 
