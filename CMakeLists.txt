@@ -20,16 +20,20 @@ endif()
 #target_compile_options(static PRIVATE -fPIE)
 #target_compile_options(static PUBLIC -fno-plt)
 
+function (generate_symbol_list FROM_TARGET)
+    add_custom_command(OUTPUT ${FROM_TARGET}.nm
+            DEPENDS ${FROM_TARGET}
+            COMMAND nm -g --defined-only -B $<TARGET_FILE:${FROM_TARGET}> | cut -d " " -f 3 >${FROM_TARGET}.nm
+            WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+            COMMENT "Generating list of all symbols for $<TARGET_FILE:${FROM_TARGET}>.")
+endfunction()
+
 if (OBJCOPY_LOCALIZE)
+    generate_symbol_list(static)
+
     add_library(shared1r OBJECT "shared1.cpp")
     set_target_properties(shared1r PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
     set_target_properties(shared1r PROPERTIES LINK_FLAGS "-v")
-
-    add_custom_command(OUTPUT static.nm
-            DEPENDS static
-            COMMAND nm -g --defined-only -B $<TARGET_FILE:static> | cut -d " " -f 3 >static.nm
-            WORKING_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-            COMMENT "Generating list of all symbols for libstatic.a.")
 
     add_custom_command(OUTPUT libshared1i.a
             DEPENDS shared1r static static.nm
