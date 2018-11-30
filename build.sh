@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 build_with_option () {
 	OPTION=$1
         DIRNAME=build-${OPTION}
