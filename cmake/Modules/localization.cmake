@@ -23,6 +23,6 @@ function (create_localized_shared_lib TARGET DEP_LOCALIZE SOURCES)
     set_target_properties(${TARGET}i PROPERTIES INTERFACE_LINK_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/lib${TARGET}i.a)
 
     add_library(${TARGET} SHARED dummy.cpp)
-    target_link_libraries(${TARGET} PRIVATE ${TARGET}i dl)
+    target_link_libraries(${TARGET} PRIVATE ${TARGET}i $<TARGET_PROPERTY:${DEP_LOCALIZE},LINK_LIBRARIES>)
     set_target_properties(${TARGET} PROPERTIES LINK_FLAGS "-v")
 endfunction()
