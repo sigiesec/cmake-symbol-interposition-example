@@ -1,11 +1,13 @@
 #!/bin/sh
 
+set -e
+
 build_with_option () {
 	OPTION=$1
         DIRNAME=build-${OPTION}
-	if [[ ! -d ${DIRNAME} ]] ; then mkdir ${DIRNAME} ; fi
+	if [ ! -d ${DIRNAME} ] ; then mkdir ${DIRNAME} ; fi
 	cd ${DIRNAME}
-	if [[ -f CMakeCache.txt ]] ; then rm CMakeCache.txt ; fi
+	if [ -f CMakeCache.txt ] ; then rm CMakeCache.txt ; fi
 	cmake .. -DCMAKE_VERBOSE_MAKEFILE=ON -D${OPTION}=ON
 	cmake --build .
 	./test2

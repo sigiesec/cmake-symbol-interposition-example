@@ -23,7 +23,7 @@ matrix:
           packages:
             - clang-6.0
        env:
-         - MATRIX_EVAL="CC=clang && CXX=clang++"
+         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
 
 script:
   - eval "${MATRIX_EVAL}"
