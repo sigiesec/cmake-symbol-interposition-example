@@ -1,6 +1,6 @@
 language: cpp
 
-dist: trusty
+dist: xenial 
 sudo: false
 
 matrix:
@@ -15,15 +15,8 @@ matrix:
        env:
          - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
      - os: linux
-       addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty-6.0
-          packages:
-            - clang-6.0
        env:
-         - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+         - MATRIX_EVAL="CC=clang && CXX=clang++"
 
 script:
   - eval "${MATRIX_EVAL}"
