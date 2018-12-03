@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.12)
 
 project(test2)
 
@@ -26,8 +26,10 @@ if (OBJCOPY_LOCALIZE)
 
     generate_symbol_list(static)
 
-    create_localized_shared_lib(shared1 static "shared1.cpp")
-    create_localized_shared_lib(shared2 static "shared2.cpp")
+    create_localized_shared_lib(shared1 SHARED static SRC_TARGET1)
+    target_sources(${SRC_TARGET1} PRIVATE "shared1.cpp")
+    create_localized_shared_lib(shared2 SHARED static SRC_TARGET2)
+    target_sources(${SRC_TARGET2} PRIVATE "shared2.cpp")
 else ()
     add_library(shared1 SHARED "shared1.cpp")
     target_link_libraries(shared1 PRIVATE static )
