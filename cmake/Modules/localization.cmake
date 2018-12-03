@@ -32,7 +32,7 @@ function (create_localized_shared_lib TARGET TYPE DEP_LOCALIZE OUT_SRC_TARGET_VA
         make_valid_filename(${DEP_LOCALIZE} DEP_LOCALIZE_FILENAME)
         add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lib${TARGET}i.a
                 DEPENDS ${TARGET}r ${DEP_LOCALIZE} ${DEP_LOCALIZE_FILENAME}_nm
-                COMMAND ${CMAKE_LINKER} -Ur --whole-archive $<TARGET_OBJECTS:${TARGET}r> --no-whole-archive $<TARGET_FILE:${DEP_LOCALIZE}> -o lib${TARGET}i.a
+                COMMAND ${CMAKE_LINKER} -Ur $<TARGET_OBJECTS:${TARGET}r> $<TARGET_FILE:${DEP_LOCALIZE}> -o lib${TARGET}i.a
                 COMMAND ${CMAKE_OBJCOPY} -v --localize-symbols ${CMAKE_BINARY_DIR}/${DEP_LOCALIZE_FILENAME}.nm lib${TARGET}i.a
                 COMMAND_EXPAND_LISTS
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

@@ -48,6 +48,6 @@ add_executable(${PROJECT_NAME} "main.cpp")
 if (DYNAMIC_DEEPBIND)
     target_link_libraries(${PROJECT_NAME} PRIVATE dl)
 else()
-    target_link_libraries(${PROJECT_NAME} PRIVATE shared1 shared2)
+    target_link_libraries(${PROJECT_NAME} PRIVATE -Wl,--whole-archive shared1 shared2 -Wl,--no-whole-archive)
 endif()
 
